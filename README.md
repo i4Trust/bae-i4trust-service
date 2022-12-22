@@ -1,15 +1,7 @@
-# bae-i4trust-service
-BAE Plugin for i4Trust services
+# BAE-Plugins for NGSI-LD Dataservices
 
-## Usage
+The repository contains plugins for offering services, based on NGSI-LD, using the [i4Trust-Framework](https://github.com/i4Trust/building-blocks). 
+Two plugins are available:
 
-Create a zip from the contents of this directory:
-```shell
-zip bae-i4trust-service.zip package.json i4trust_service.py
-```
-Alternatively download the zip file created with the release here on GitHub.
-
-Copy the zip file to the `/plugins` directory of your charging backend component and load the plugin:
-```shell
-./manage.py loadplugin plugins/bae-i4trust-service.zip
-```
+- [NGSI-LD Data Service](./i4trust-data-service/README.md) supporting [iShare-compliant](https://dev.ishareworks.org/index.html) access-control 
+- [NGSI-LD Data Service for VerifiableCredentials](./vc-data-service/README.md) with the support of Roles and VerifiableCredentials 
