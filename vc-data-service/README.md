@@ -1,4 +1,4 @@
-# bae-i4trust-service
+# vc-data-service
 BAE Plugin for services, using role-based verifiable credentials.
 
 ## Usage
