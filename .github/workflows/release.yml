@@ -69,7 +69,7 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ needs.generate-version.outputs.version }}
-          prerelease: true
+          prerelease: false
           title: ${{ needs.generate-version.outputs.version }}
           files: |
              bae-i4trust-service_${{ needs.generate-version.outputs.version }}.zip
