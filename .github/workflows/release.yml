@@ -59,11 +59,15 @@ jobs:
 
       - name: Zip plugin i4trust
         run: |
-          zip bae-i4trust-service_${{ needs.generate-version.outputs.version }}.zip i4trust-data-service/package.json i4trust-data-service/i4trust_service.py
+          cd i4trust-data-service/
+          zip bae-i4trust-service_${{ needs.generate-version.outputs.version }}.zip package.json i4trust_service.py
+          mv bae-i4trust-service_${{ needs.generate-version.outputs.version }}.zip ../.
 
       - name: Zip plugin vc
         run: |
-          zip bae-vc-service_${{ needs.generate-version.outputs.version }}.zip vc-data-service/package.json vc-data-service/i4trust_service.py
+          cd vc-data-service/
+          zip bae-vc-service_${{ needs.generate-version.outputs.version }}.zip package.json i4trust_service.py
+          mv bae-vc-service_${{ needs.generate-version.outputs.version }}.zip ../.
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
