@@ -226,7 +226,7 @@ class I4TrustService(Plugin):
             "delegationEvidence": {
                 "notBefore": not_before,
                 "notOnOrAfter": not_after,
-                "policyIssuer": asset.meta_info['provider_did'],
+                "policyIssuer": asset.meta_info['idp_id'],
                 "target": {
                     "accessSubject": (order.owner_organization.issuerDid)
                 },
