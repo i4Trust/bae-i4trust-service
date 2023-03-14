@@ -87,7 +87,7 @@ class I4TrustService(Plugin):
     def on_post_product_spec_validation(self, provider, asset):
         # Save IDP id with the offering meta data
         asset.meta_info['idp_id'] = provider.idp
-	asset.meta_info['provider_did'] = provider.issuerDid
+        asset.meta_info['provider_did'] = provider.issuerDid
 
         # Check vc type 
         if 'vc_type' not in asset.meta_info:
