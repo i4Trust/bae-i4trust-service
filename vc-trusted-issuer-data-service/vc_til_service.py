@@ -42,6 +42,11 @@ from wstore.asset_manager.resource_plugins.plugin_error import PluginError
 
 BAE_VC = os.getenv('BAE_PLUGIN_VC')
 
+UNITS = [{
+    'name': 'Api call',
+    'description': 'The final price is calculated based on the number of calls made to the API'
+}]
+
 class VcTilService(Plugin):
 
     def on_post_product_spec_validation(self, provider, asset):
