@@ -56,12 +56,14 @@ jobs:
 
       - name: Set version
         run: |
-          jq '.version = $newVersion' --arg newVersion ${{ needs.generate-version.outputs.version }} vc-data-service/package.json > vc-data-service/tmp.package.json && mv vc-data-service/tmp.package.json vc-data-service/package.json    
+          jq '.version = $newVersion' --arg newVersion ${{ needs.generate-version.outputs.version }} vc-data-service/package.json > vc-data-service/tmp.package.json && mv vc-data-service/tmp.package.json vc-data-service/package.json
+          jq '.version = $newVersion' --arg newVersion ${{ needs.generate-version.outputs.version }} vc-trusted-issuer-data-service/package.json > vc-trusted-issuer-data-service/tmp.package.json && mv vc-trusted-issuer-data-service/tmp.package.json vc-trusted-issuer-data-service/package.json    
           jq '.version = $newVersion' --arg newVersion ${{ needs.generate-version.outputs.version }} i4trust-data-service/package.json > i4trust-data-service/tmp.package.json && mv i4trust-data-service/tmp.package.json i4trust-data-service/package.json    
 
       - name: Echo update
         run: |
           cat vc-data-service/package.json
+          cat vc-trusted-issuer-data-service/package.json
           cat i4trust-data-service/package.json
 
       - name: Zip plugin i4trust
@@ -75,6 +77,12 @@ jobs:
           cd vc-data-service/
           zip bae-vc-service_${{ needs.generate-version.outputs.version }}.zip package.json i4trust_service.py
           mv bae-vc-service_${{ needs.generate-version.outputs.version }}.zip ../.
+
+      - name: Zip plugin vc trusted-issuer-list
+        run: |
+          cd vc-trusted-issuer-data-service/
+          zip bae-vc-trusted-issuer-service_${{ needs.generate-version.outputs.version }}.zip package.json vc_til_service.py
+          mv bae-vc-trusted-issuer-service_${{ needs.generate-version.outputs.version }}.zip ../.
           
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -85,6 +93,4 @@ jobs:
           files: |
              bae-i4trust-service_${{ needs.generate-version.outputs.version }}.zip
              bae-vc-service_${{ needs.generate-version.outputs.version }}.zip
-
-  
-      
+             bae-vc-trusted-issuer-service_${{ needs.generate-version.outputs.version }}.zip
