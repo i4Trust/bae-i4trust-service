@@ -1,0 +1,16 @@
+# vc-trusted-issuer-data-service
+BAE Plugin for services, using role-based verifiable credentials and creating entries 
+at an EBSI compliant Trusted Issuer List.
+
+## Usage
+
+Create a zip from the contents of this directory:
+```shell
+zip bae-vc-trusted-issuer-service.zip package.json vc_til_service.py
+```
+Alternatively download the zip file created with the release here on GitHub.
+
+Copy the zip file to the `/plugins` directory of your charging backend component and load the plugin:
+```shell
+./manage.py loadplugin plugins/bae-vc-trusted-issuer-service.zip
+```

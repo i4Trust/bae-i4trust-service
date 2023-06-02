@@ -1,0 +1,46 @@
+{
+    "name": "NGSI-LD Data Service for VC at trusted-issuer list",
+    "author": "dwendland",
+    "version": "0.0.1",
+    "module": "vc_til_service.VcTilService",
+    "media_types": ["FIWARE NGSI-LD"],
+    "formats": ["URL"],
+    "overrides": [],
+    "pull_accounting": true,
+    "form_order": [
+	"trusted_issuer_endpoint", "provider_did", "vc_type", "role_names",
+	"minutes"
+    ],
+    "form": {
+        "minutes": {
+            "type": "text",
+            "label": "Duration in Minutes",
+            "placeholder": "100000",
+            "mandatory": false
+        },
+        "trusted_issuer_endpoint": {
+            "type": "text",
+            "label": "Registry /trusted_issuer Endpoint",
+            "placeholder": "https://pdc-ti.i4trust.fiware.io/issuer",
+            "mandatory": true
+        },
+	"provider_did": {
+	    "type": "text",
+            "label": "DID of service provider",
+            "placeholder": "did:key:my-did",
+            "mandatory": true
+	},
+        "vc_type": {
+            "type": "text",
+            "label": "Verifiable Credential Type",
+            "placeholder": "PacketDeliveryService",
+            "mandatory": true
+        },
+        "role_names": {
+            "type": "text",
+            "label": "(Comma-seperated) List of roles allowed to be issued.",
+            "placeholder": "STANDARD_CUSTOMER,GOLD_CUSTOMER",
+            "mandatory": true
+        }
+    }
+}
