@@ -8,7 +8,7 @@
     "overrides": [],
     "pull_accounting": true,
     "form_order": [
-	"trusted_issuers_endpoint", "provider_did", "vc_type", "role_names",
+	"trusted_issuer_endpoint", "provider_did", "vc_type", "role_names",
 	"minutes"
     ],
     "form": {
