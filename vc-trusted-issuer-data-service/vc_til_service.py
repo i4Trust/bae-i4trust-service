@@ -215,6 +215,27 @@ class VcTilService(Plugin):
         # Parse URL
         parsed_url = urlparse(auth_request_url)
         params = parse_qs(parsed_url.query)
+
+        # Build VP token
+        decoded_vc = jwt.decode(BAE_VC, options={"verify_signature": False})
+        vc = decoded_vc["verifiableCredential"]
+        vp_token = {
+            "@context": [
+                "https://www.w3.org/2018/credentials/v1"
+            ],
+            "type": [
+                "VerifiablePresentation"
+            ],
+            "verifiableCredential": [
+                vc
+            ],
+            "id": str(uuid.uuid4()),
+            "holder": "did:example:holder",
+            "proof": {
+                "type": "Ed25519Signature2018",
+                "created": "2021-03-19T15:30:15Z",
+            }
+        }
         
         # Send authentication_response
         auth_response_endpoint = "{}api/v1/authentication_response".format(verifier_url)
@@ -226,7 +247,7 @@ class VcTilService(Plugin):
         auth_params = {
             #'state': params['state'][0],
             'presentation_submission': urlsafe_b64encode(str(presentation_definition).encode('utf-8')).rstrip(b'='),
-            'vp_token': BAE_VC
+            'vp_token': urlsafe_b64encode(json.dumps(vp_token).encode('utf-8')).rstrip(b'=')
         }
         query_params = {
             'state': params['state'][0]
