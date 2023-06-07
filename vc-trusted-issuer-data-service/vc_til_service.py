@@ -33,7 +33,7 @@ from datetime import datetime, timedelta
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 
-from base64 import urlsafe_b64encode
+from base64 import urlsafe_b64encode, b64decode
 
 from django.conf import settings
 
@@ -217,8 +217,7 @@ class VcTilService(Plugin):
         params = parse_qs(parsed_url.query)
 
         # Build VP token
-        decoded_vc = jwt.decode(BAE_VC, options={"verify_signature": False})
-        vc = decoded_vc["verifiableCredential"]
+        vc = json.loads(b64decode(BAE_VC))
         vp_token = {
             "@context": [
                 "https://www.w3.org/2018/credentials/v1"
