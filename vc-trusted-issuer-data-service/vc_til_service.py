@@ -121,15 +121,15 @@ class VcTilService(Plugin):
 
     def _get_allowed_roles(self, roles_str, did):
         allowed_values = []
-
+        
         # Loop over roles
         roles = roles_str.split(',')
         for i,r in enumerate(roles):
             # Append single entry per role
-            allowed_values.append({
+            allowed_values.append([{
                 "names": [r],
                 "target": did
-            })
+            }])
 
             # Add all roles in one entry
             names = [r]
@@ -137,10 +137,10 @@ class VcTilService(Plugin):
                 names.append(j)
             for k in roles[i+1:]:
                 names.append(k)
-            allowed_values.append({
+            allowed_values.append([{
                 "names": names,
                 "target": did
-            })
+            }])
                 
         return allowed_values
 
@@ -192,6 +192,7 @@ class VcTilService(Plugin):
         # Get verifier URI
         parsed_url = urlparse(samedevice_endpoint)
         verifier_url = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_url)
+        verifier_url_http = 'http://{uri.netloc}/'.format(uri=parsed_url)
 
         # Get redirect URL from samedevice endpoint
         samedevice_response = requests.get(samedevice_endpoint, allow_redirects=False)
@@ -267,11 +268,11 @@ class VcTilService(Plugin):
         auth_response_params = parse_qs(parsed_url.query)
 
         # Get access token JWT
-        token_endpoint = "{}/token".format(verifier_url)
+        token_endpoint = "{}token".format(verifier_url)
         token_params = {
             "grant_type": "authorization_code",
             "code": auth_response_params['code'][0],
-            "redirect_uri": verifier_url
+            "redirect_uri": verifier_url_http
         }
         token_response = requests.post(token_endpoint, data=token_params)
         try:
