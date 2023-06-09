@@ -20,7 +20,7 @@
         },
         "trusted_issuer_endpoint": {
             "type": "text",
-            "label": "Registry /trusted_issuer Endpoint",
+            "label": "Trusted-Issuer-List /issuer Endpoint",
             "placeholder": "https://pdc-ti.i4trust.fiware.io/issuer",
             "mandatory": true
         },
@@ -38,7 +38,7 @@
         },
         "role_names": {
             "type": "text",
-            "label": "(Comma-seperated) List of roles allowed to be issued.",
+            "label": "(Comma-seperated) List of roles allowed to be issued",
             "placeholder": "STANDARD_CUSTOMER,GOLD_CUSTOMER",
             "mandatory": true
         }
