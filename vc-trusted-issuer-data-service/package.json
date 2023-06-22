@@ -8,7 +8,8 @@
     "overrides": [],
     "pull_accounting": true,
     "form_order": [
-	"trusted_issuer_endpoint", "provider_did", "vc_type", "role_names",
+	"trusted_issuer_endpoint", "apikey_header", "apikey",
+	"provider_did", "vc_type", "role_names",
 	"minutes"
     ],
     "form": {
@@ -23,6 +24,18 @@
             "label": "Trusted-Issuer-List /issuer Endpoint",
             "placeholder": "https://pdc-ti.i4trust.fiware.io/issuer",
             "mandatory": true
+        },
+	"apikey_header": {
+            "type": "text",
+            "label": "API-Key header name (optional)",
+            "placeholder": "AS-API-KEY",
+            "mandatory": false
+        },
+	"apikey": {
+            "type": "text",
+            "label": "API-KEY (optional)",
+            "placeholder": "aaaa-bbbb-cccc-dddd",
+            "mandatory": false
         },
 	"provider_did": {
 	    "type": "text",

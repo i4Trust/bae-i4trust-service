@@ -40,6 +40,8 @@ from django.conf import settings
 from wstore.asset_manager.resource_plugins.plugin import Plugin
 from wstore.asset_manager.resource_plugins.plugin_error import PluginError
 
+DEFAULT_HEADER_NAME = "AS-API-KEY"
+
 BAE_VC = os.getenv('BAE_PLUGIN_VC')
 
 UNITS = [{
@@ -166,11 +168,21 @@ class VcTilService(Plugin):
         }
         return issuer
 
-    def _same_device_flow(self, til_endpoint, payload):
+    def _same_device_flow(self, til_endpoint, payload, apikey, apikey_header):
         # Will perform the samedevice flow to obtain an access token from the verifier/provider
+
+        # Add API-Key
+        headers = {}
+        if apikey and len(apikey) > 0:
+            header_name = apikey_header
+            if not header_name or len(header_name) < 1:
+                header_name = DEFAULT_HEADER_NAME
+            headers = {
+                header_name: apikey
+            }
         
         # Send request without header, should result in redirect to verifier
-        issuer_response = requests.post(til_endpoint, json=payload, allow_redirects=False)
+        issuer_response = requests.post(til_endpoint, json=payload, headers=headers, allow_redirects=False)
         try:
             issuer_response.raise_for_status()
         except HTTPError as e:
@@ -305,12 +317,22 @@ class VcTilService(Plugin):
 
         # Get JWT access token from verifier via AS
         til_endpoint = asset.meta_info['trusted_issuer_endpoint']
-        token = self._same_device_flow(til_endpoint, payload)
+        apikey = asset.meta_info['apikey']
+        apikey_header = asset.meta_info['apikey_header']
+        token = self._same_device_flow(til_endpoint, payload, apikey, apikey_header)
+
+        # Add API-Key
+        headers = {
+             'Authorization': 'Bearer ' + token
+        }
+        if apikey and len(apikey) > 0:
+            header_name = apikey_header
+            if not header_name or len(header_name) < 1:
+                header_name = DEFAULT_HEADER_NAME
+            headers[header_name] = apikey
         
         # Create trusted issuer at TIL
-        issuer_response = requests.post(til_endpoint, json=payload, allow_redirects=False, headers={
-            'Authorization': 'Bearer ' + token
-        })
+        issuer_response = requests.post(til_endpoint, json=payload, allow_redirects=False, headers=headers)
         try:
             issuer_response.raise_for_status()
         except HTTPError as e:
