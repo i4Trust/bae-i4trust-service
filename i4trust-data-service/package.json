@@ -9,6 +9,7 @@
     "pull_accounting": true,
     "form_order": [
 	"ar_id", "ar_token_endpoint", "ar_policy_endpoint",
+	"ar_apikey_header", "ar_apikey",
 	"minutes",
 	"resource_type",
 	"get_allowed", "get_ids", "get_attributes",
@@ -47,6 +48,18 @@
             "label": "AR ID",
             "placeholder": "EU.EORI.NL000000000",
             "mandatory": true
+        },
+	"ar_apikey_header": {
+            "type": "text",
+            "label": "AR API-Key header name (optional)",
+            "placeholder": "AS-API-KEY",
+            "mandatory": false
+        },
+	"ar_apikey": {
+            "type": "text",
+            "label": "AR API-KEY (optional)",
+            "placeholder": "aaaa-bbbb-cccc-dddd",
+            "mandatory": false
         },
         "resource_type": {
             "type": "text",
