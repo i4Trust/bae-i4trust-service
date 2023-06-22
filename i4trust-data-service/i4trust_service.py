@@ -33,6 +33,7 @@ from django.conf import settings
 from wstore.asset_manager.resource_plugins.plugin import Plugin
 from wstore.asset_manager.resource_plugins.plugin_error import PluginError
 
+DEFAULT_HEADER_NAME = "AS-API-KEY"
 
 CLIENT_ID = os.getenv('BAE_EORI', 'EU.EORI.NLMARKETPLA')
 KEY = os.getenv('BAE_TOKEN_KEY', './certs/mplace.key')
@@ -375,7 +376,17 @@ class I4TrustService(Plugin):
             'client_assertion': token
         }
 
-        response = requests.post(token_endpoint, data=auth_params)
+        # Add API-Key
+        headers = {}
+        if asset.meta_info['ar_apikey'] and len(asset.meta_info['ar_apikey']) > 0:
+            header_name = asset.meta_info['ar_apikey_header']
+            if not header_name or len(header_name) < 1:
+                header_name = DEFAULT_HEADER_NAME
+            headers = {
+                header_name: asset.meta_info['ar_apikey']
+            }
+
+        response = requests.post(token_endpoint, data=auth_params, headers=headers)
 
         try:
             response.raise_for_status()
@@ -488,10 +499,18 @@ class I4TrustService(Plugin):
         # Get access token
         access_token = self._get_access_token(asset)
 
-        # Update policies
-        policy_response = requests.post(policy_endpoint, json=delegation_evidence, headers={
+        # Add API-Key
+        headers = {
              'Authorization': 'Bearer ' + access_token
-        })
+        }
+        if asset.meta_info['ar_apikey'] and len(asset.meta_info['ar_apikey']) > 0:
+            header_name = asset.meta_info['ar_apikey_header']
+            if not header_name or len(header_name) < 1:
+                header_name = DEFAULT_HEADER_NAME
+            headers[header_name] = asset.meta_info['ar_apikey']
+
+        # Update policies
+        policy_response = requests.post(policy_endpoint, json=delegation_evidence, headers=headers)
 
         try:
             policy_response.raise_for_status()
@@ -516,10 +535,18 @@ class I4TrustService(Plugin):
         # Get access token
         access_token = self._get_access_token(asset)
 
-        # Create policies
-        policy_response = requests.post(policy_endpoint, json=delegation_evidence, headers={
+        # Add API-Key
+        headers = {
              'Authorization': 'Bearer ' + access_token
-        })
+        }
+        if asset.meta_info['ar_apikey'] and len(asset.meta_info['ar_apikey']) > 0:
+            header_name = asset.meta_info['ar_apikey_header']
+            if not header_name or len(header_name) < 1:
+                header_name = DEFAULT_HEADER_NAME
+            headers[header_name] = asset.meta_info['ar_apikey']
+
+        # Create policies
+        policy_response = requests.post(policy_endpoint, json=delegation_evidence, headers=headers)
 
         try:
             policy_response.raise_for_status()
