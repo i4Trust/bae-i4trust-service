@@ -22,8 +22,10 @@ from __future__ import unicode_literals
 import os
 import re
 import jwt
+import json
 import requests
 from requests.exceptions import HTTPError
+from logging import getLogger
 import uuid
 
 import time
@@ -32,6 +34,8 @@ from django.conf import settings
 
 from wstore.asset_manager.resource_plugins.plugin import Plugin
 from wstore.asset_manager.resource_plugins.plugin_error import PluginError
+from wstore.asset_manager.resource_plugins.plugin import Plugin
+
 
 DEFAULT_HEADER_NAME = "AS-API-KEY"
 
@@ -43,6 +47,8 @@ UNITS = [{
     'name': 'Api call',
     'description': 'The final price is calculated based on the number of calls made to the API'
 }]
+
+logger = getLogger("wstore.default_logger")
 
 class I4TrustService(Plugin):
     def build_token(self, params):
@@ -85,6 +91,8 @@ class I4TrustService(Plugin):
         })
 
     def on_post_product_spec_validation(self, provider, asset):
+        logger.debug("i4trust Service: On post product spec validation")
+
         # Save IDP id with the offering meta data
         asset.meta_info['idp_id'] = provider.idp
 
@@ -188,6 +196,8 @@ class I4TrustService(Plugin):
             asset.meta_info['minutes'] = 10080  # One week
 
         # Save asset data
+        logger.debug("i4trust Service: meta data {}".format(json.dumps(asset.meta_info)))
+
         asset.save()
 
     def _append_string_charact(self, charact, name, description, value):
@@ -207,6 +217,8 @@ class I4TrustService(Plugin):
             })
         
     def on_post_product_spec_attachment(self, asset, asset_t, product_spec):
+        logger.debug("i4trust Service: On post product spec attachment")
+
         # Load meta data as characteristics
         prod_url = '{}/api/catalogManagement/v2/productSpecification/{}'.format(
             settings.CATALOG, asset.product_id)
@@ -349,6 +361,7 @@ class I4TrustService(Plugin):
             resp.raise_for_status()
         except:
             # This is a nice to have, but the product is already created
+            logger.debug("i4trust Service: Error updating product characteristics")
             pass
 
     def on_post_product_offering_validation(self, asset, product_offering):
@@ -486,6 +499,7 @@ class I4TrustService(Plugin):
         return delegation_evidence
 
     def on_product_suspension(self, asset, contract, order):
+        logger.debug("i4trust Service: On product suspension")
 
         policy_endpoint = asset.meta_info['ar_policy_endpoint']
 
@@ -520,9 +534,12 @@ class I4TrustService(Plugin):
             print(e)
             print(e.response.text)
 
+            logger.error("i4trust Service: Error creating policy {}".format(str(e)))
+
             raise PluginError('Error creating policy')
     
     def on_product_acquisition(self, asset, contract, order):
+        logger.debug("i4trust Service: On product acquired")
 
         policy_endpoint = asset.meta_info['ar_policy_endpoint']
 
@@ -555,6 +572,7 @@ class I4TrustService(Plugin):
             print(e.request.body)
             print(e)
             print(e.response.text)
+            logger.error("i4trust Service: Error creating policy {}".format(str(e)))
 
             raise PluginError('Error creating policy')
 
