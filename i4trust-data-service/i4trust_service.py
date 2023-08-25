@@ -34,7 +34,6 @@ from django.conf import settings
 
 from wstore.asset_manager.resource_plugins.plugin import Plugin
 from wstore.asset_manager.resource_plugins.plugin_error import PluginError
-from wstore.asset_manager.resource_plugins.plugin import Plugin
 
 
 DEFAULT_HEADER_NAME = "AS-API-KEY"
