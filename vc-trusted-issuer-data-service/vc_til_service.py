@@ -168,7 +168,7 @@ class VcTilService(Plugin):
         }
         return issuer
 
-    def _same_device_flow(self, til_endpoint, payload, apikey, apikey_header):
+    def _same_device_flow(self, til_endpoint, payload, apikey, apikey_header, provider_did):
         # Will perform the samedevice flow to obtain an access token from the verifier/provider
 
         # Add API-Key
@@ -230,7 +230,12 @@ class VcTilService(Plugin):
         params = parse_qs(parsed_url.query)
 
         # Build VP token
-        vc = json.loads(b64decode(BAE_VC))
+        vc_list = json.loads(b64decode(BAE_VC))
+        vc = vc_list.get(provider_did)
+        if not vc:
+            print("ERROR: Could not find VC for provider DID: {}".format(provider_did))
+            raise PluginError("ERROR: Could not find VC for provider DID: {}".format(provider_did))
+        
         vp_token = {
             "@context": [
                 "https://www.w3.org/2018/credentials/v1"
@@ -319,7 +324,8 @@ class VcTilService(Plugin):
         til_endpoint = asset.meta_info['trusted_issuer_endpoint']
         apikey = asset.meta_info['apikey']
         apikey_header = asset.meta_info['apikey_header']
-        token = self._same_device_flow(til_endpoint, payload, apikey, apikey_header)
+        provider_did = asset.meta_info['provider_did']
+        token = self._same_device_flow(til_endpoint, payload, apikey, apikey_header, provider_did)
 
         # Add API-Key
         headers = {
